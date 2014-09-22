@@ -46,11 +46,6 @@ public class VerifierMinions {
         return sb.toString();
     }
 
-    public static String getCertCN(X509Certificate cert) throws IOException {
-        X500Name x500Name = new X500Name(cert.getSubjectX500Principal().getName());
-        return x500Name.getCommonName();
-    }
-
     private static MessageDigest getDigest(String algorithm) {
         try {
             return MessageDigest.getInstance(algorithm);
@@ -59,12 +54,8 @@ public class VerifierMinions {
         }
     }
 
-    private static byte[] digest(byte[] data){
-        return getDigest(FINGERPRINT_DIGEST).digest(data);
-    }
-
     private static String digestHex(byte[] data){
-        return toHex(digest(data));
+        return toHex(getDigest(FINGERPRINT_DIGEST).digest(data));
     }
 
     private static String toHex(byte[] data){
@@ -80,7 +71,7 @@ public class VerifierMinions {
         return sb.toString();
     }
 
-    private static String getFingerprint(Certificate cert) throws CertificateEncodingException {
+    public static String getFingerprint(Certificate cert) throws CertificateEncodingException {
         return digestHex(cert.getEncoded());
     }
 }
